@@ -3,7 +3,7 @@
 ### 파일 구조
 
 ```
-todo/
+workitem/
 ├── README.md                       # 본 문서
 ├── backlog/
 │   ├── INDEX.md                    # 트랙 그룹화 + 근황·우선순위
@@ -19,7 +19,7 @@ todo/
 
 ### 트랙 정의
 
-프로젝트 트랙 체계는 `{{TODO_TRACKS}}` (INIT.md Phase 2-0에서 확정).
+프로젝트 트랙 체계는 `{{TODO_TRACKS}}` (bootstrap-project 시 확정).
 
 새 TODO는 확정된 트랙 중 하나로 분류한다. 어디에도 정확히 맞지 않으면 새 트랙 신설 여부를 먼저 결정한다.
 
@@ -50,6 +50,8 @@ TODO-{N}-{kebab-case-en-slug}.md
 
 ### TODO 항목 포맷
 
+새 entry는 `cp tools/templates/workitem.md backlog/data/{TRACK}/TODO-{N}-{slug}.md`로 만든다 — 스켈레톤 SoT는 `tools/templates/workitem.md`다. 아래 블록은 각 필드의 의미.
+
 ```
 ### [TODO-번호] 제목
 
@@ -78,7 +80,7 @@ done-criteria: 완료 판단 기준
 
 ### owner 분배 기준
 
-<!-- INIT에서 사용자 답변 또는 기본값으로 채워진다 -->
+<!-- bootstrap-project 시 사용자 답변 또는 기본값으로 채워진다 -->
 <!-- 기본값: defaults/owner-template.md 참조 -->
 
 ### 우선순위 기준

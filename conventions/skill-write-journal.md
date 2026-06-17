@@ -1,124 +1,55 @@
 # Skill: Write Work Journal (작업 일지 작성 스킬)
 
-This skill describes the exact steps an AI agent must follow when the user requests to write, update, or generate the daily work-journal entry.
+사용자가 일일 작업 일지의 작성·갱신을 요청했을 때 에이전트가 따르는 절차다. 형식 SoT는 [`tools/templates/work-journal.md`](../tools/templates/work-journal.md), 운영 규약은 [`work-journal/README.md`](../work-journal/README.md).
 
 ## Execution Steps
 
 ### 1. Gather Context & Metadata
-1. **Get Today's Date**: Determine today's date in `YYYY-MM-DD` format (using the system's local time).
-2. **Target File Path**: The target journal path is `project-docs/work-journal/YYYY-MM-DD.md`.
-3. **Check for Existing Journal**: Check if `project-docs/work-journal/YYYY-MM-DD.md` already exists.
-   - If it exists, read it first so you can append or update the session details instead of overwriting.
-4. **Detect Active Task**: Read `project-docs/todo/backlog/INDEX.md` and extract the currently active TODO (e.g., lines mentioning `Currently active`).
-5. **Get Git Status**: Run `git status` in the workspace to find:
-   - The current branch name.
-   - Any modified or untracked files.
-6. **Find Previous Journal**: Look at files in `project-docs/work-journal/` (e.g. `20*.md`), sort them, and identify the immediately preceding journal entry date to create a link `[[YYYY-MM-DD]]`.
+1. **Today's Date**: 시스템 로컬 시간 기준 `YYYY-MM-DD`.
+2. **Target Path**: `project-docs/work-journal/YYYY-MM-DD.md`.
+3. **Check Existing**: 같은 날 파일이 있으면 **먼저 읽고** append한다(덮어쓰기 금지 — 아래 Append Rules).
+4. **Detect Active Task**: `project-docs/workitem/backlog/INDEX.md`에서 현재 active / in-progress item을 추출.
+5. **Git Status**: 워크스페이스에서 현재 branch + 변경/untracked 파일 확인.
 
-### 2. Analyze Session History
-1. Review the conversation logs (`overview.txt` or current chat messages) to extract:
-   - What problems were discussed.
-   - What design decisions were made.
-   - What files were modified, created, or deleted.
-   - Any key commands run.
-   - Any issues resolved.
+### 2. Analyze Session
+대화 맥락에서 추출: 논의된 문제 / 내린 결정 / 변경·생성·삭제된 파일 / 핵심 명령 / 해결된 이슈.
 
-### 3. Draft the Journal Entry
-Construct the markdown file matching the following standard layout.
-**Do not insert Obsidian frontmatter** (no `---` / `tags:` block) — write plain markdown.
+### 3. Draft — 템플릿 복사로 시작
+`cp tools/templates/work-journal.md work-journal/YYYY-MM-DD.md` 후 채운다. **Obsidian frontmatter 미사용**(일반 마크다운). 구조:
 
 ```markdown
-# {{PROJECT_NAME}} 작업 일지 — YYYY-MM-DD
+# {YYYY-MM-DD} work log
 
-> 트랙: [Auto-detected Track or TODO ID]
-> 브랜치: `[Auto-detected Branch]`
-> 작성: YYYY-MM-DD HH:MM KST
-> 참조: [List of modified files relative to workspace root]
-> 이전 일지: [[PREVIOUS-YYYY-MM-DD]]
+{한 줄 요약 — 그날의 성격·주제. 코드 작업이면 선택 메타: branch / 작업 ID.}
 
----
+## 미완 / 다음
+- {다음 세션 진입점 / 미결 / 후속}        ← 항상 본문 최상단
 
-## 진행도 한눈에
+## 1. {주제}
+**결론**: {핵심 먼저 — bottom line 한두 줄.}
+{무엇을 / 왜 / 메커니즘·결정·트레이드오프. terse하되 인과 유지. 근거는 `file:line` 또는 링크.}
 
-| 범위 | 상태 |
-|---|---|
-| [Task / Step Name] | [✅ (Completed) or ⚪ (Pending)] |
-
----
-
-## 현 상황 간단 정리
-
-- [Brief summary of the session's key achievements and current state]
-
----
-
-## 1. 상세 작업 내용
-
-### 1-1. [First major milestone/action]
-- [Details of what was done, errors encountered, solutions applied, commands run, etc.]
-- [If code was changed, describe why and how]
-
-### 1-2. [Second major milestone/action]
-- ...
-
----
-
-## 결정 사항 누적
-
-| 항목 | 결정 |
-|---|---|
-| [Topic] | [Decision details and rationale] |
-
----
-
-## 다음 세션 진입 큐
-
-| 트랙 | 내용 | 비고 |
-|---|---|---|
-| [TRACK] | [Task description for next session] | [Context/Notes] |
-
----
-
-## 회고
-
-### [Key Takeaway/Retrospective Topic]
-- [What went well, what caused delays, how to avoid similar issues in the future]
+## 2. {주제}
+**결론**: …
+…
 ```
 
-### 4. Apply Compromised Language Policy
-- Write explanations, summaries, and retrospects in Korean (한국어).
-- Technical terms (class names, API endpoints, git commands, variable names, architecture labels, and pseudo-code) must be written in English.
+핵심 원칙:
+- **`## 미완 / 다음`은 항상 본문 최상단** — 다음 세션이 진입점을 즉시 보게 한다.
+- **각 `## N. 주제`는 `**결론**:` 먼저**, 그 뒤 산문. 표는 *병렬 비교 가능한 항목*에만(논증·왜는 산문).
 
-### 5. Write the File
-- If creating a new file, construct it using the template in Step 3.
-- If updating/appending to an existing file, follow the **Append Rules** below.
-- Present the summary and path of the created/updated file to the user.
+### 4. Language Policy
+설명·요약·회고는 한국어. 기술 식별자(클래스명·API 엔드포인트·git 명령·변수명·수도코드)는 영어.
 
-## Append Rules (동일 일자 추가 작업 발생 시 규약)
+### 5. Write / Append
+- 새 파일: 위 템플릿으로 작성.
+- 기존 파일: 아래 Append Rules.
+- 작성 후 경로·요약을 사용자에게 제시.
 
-When the journal file for today (`project-docs/work-journal/YYYY-MM-DD.md`) already exists, do NOT overwrite it. Instead, append the new session's information using the following guidelines:
+## Append Rules (동일 일자 추가 작업)
 
-1. **Metadata Section (상단 메타데이터)**:
-   - **트랙**: If the new task belongs to a different track/TODO, append it with `->` or a comma (e.g. `PRODUCT (TODO-35) -> CICD-INFRA (TODO-25)`).
-   - **브랜치**: Append the new branch name if switched.
-   - **작성**: Append the new session start time (e.g. `09:25 KST / 14:30 KST (DevPC 세션)`).
-   - **참조**: Append the newly modified files to the comma-separated list.
+오늘 파일이 이미 있으면 덮어쓰지 않는다. 불변성 — 작성된 `##` 섹션은 in-place 수정 금지.
 
-2. **진행도 한눈에 (Progress Table)**:
-   - Append new rows for the tasks completed or pending in this session at the bottom of the table.
-
-3. **현 상황 간단 정리 (Summary)**:
-   - Append a new bullet point summarizing the results of the additional session.
-
-4. **상세 작업 내용 (Detailed Work)**:
-   - Create a new heading level 2 for the additional session: `## 2. [추가 세션 주제 / 세션 2 상세 내용]` (or level 3 `### 1-X` if it directly continues the previous tasks).
-   - Document the details, commands, errors, and solutions in this section.
-
-5. **결정 사항 누적 (Decisions)**:
-   - Append any new design or technical decisions to the bottom of the table.
-
-6. **다음 세션 진입 큐 (Next Queue)**:
-   - Update or append new items to the queue table.
-
-7. **회고 (Retrospective)**:
-   - Add a new subheading `### [세션 2 회고 주제]` under `## 회고` to record the retrospective of the additional session.
+1. **`## 미완 / 다음` 갱신**: 살아있는 큐다. 완료분 정리 / 새 진입점 추가 — 이 큐만 갱신 허용.
+2. **새 주제 섹션 누적**: 추가 세션·작업은 다음 번호의 `## N. 주제`로 추가(기존 섹션 안에 끼워 넣지 않는다). 각 섹션 `**결론**:` 먼저.
+3. **정정**: 기존 섹션을 고치지 말고 새 `## N.` 섹션에 정정 사유와 함께 누적한다.

@@ -1,9 +1,12 @@
+<!-- TWIN: CLAUDE.md ↔ GEMINI.md 쌍둥이. 한쪽 수정 시 다른 쪽도 동일 수정 — 구조·내용 동일, 지칭 명사(Claude↔Gemini)만 다르다. -->
 # Claude / Antigravity Instructions
 
 This document serves as the system ruleset and guidelines for Antigravity, Antigravity CLI, and Claude, performing the same function as `CLAUDE.md` does for Claude Code.
 
 All conventions, architecture, and standards live in `project-docs/`.
 Read `project-docs/README.md` first — it is the 1-depth index and entry point.
+
+새 프로젝트 첫 셋업은 `@project-docs/tools/skills/bootstrap-project.md`를 1회 실행한다 (이후 상시 작업엔 불필요).
 
 ## Reasoning Loop
 
@@ -44,20 +47,12 @@ the action commits, not to cover every edge case with prescriptive rules.
 - `project-docs/architecture/overview.md` — Architecture
 - `project-docs/conventions/code-style.md` — Code conventions (incl. comment rule)
 - `project-docs/conventions/tool-usage-for-AI.md` — Tool usage rules (Filesystem/Plane MCP; incl. Plane↔TODO 연동 §2)
-- `project-docs/todo/README.md` + `todo/backlog/INDEX.md` + `todo/done/INDEX.md` — Task management
+- `project-docs/workitem/README.md` + `workitem/backlog/INDEX.md` + `workitem/done/INDEX.md` — Task management
 - `project-docs/decisions/` — ADRs (naming: `ADR-{NNN}-{TRACK}-{slug}.md`)
 - `project-docs/context/setup/` — Setup guides (getting-started / secret-guide / troubleshooting)
 - `project-docs/context/roadmap/` — Roadmap + scaling plans (reference, not active state)
-
-## Role Split
-
-The split is loose, not a strict enforcement:
-
-- **Claude (Chat)** — primary planning + execution. Drafts changes, applies edits, owns the main work loop.
-- **User** — decision-maker. Sets direction, reviews changes, runs environment-dependent ops (.env, age keys, etc.).
-- **Claude** — delegated parallel helper. Picks up tasks Claude(Chat)/User assign while they work elsewhere — typically doc review, doc freshening, cross-reference cleanup, or other parallelizable work.
-
-Claude does not run autonomously. Trigger is always explicit delegation (a `/loop` instruction, a TODO assignment, or an in-conversation request). No background polling of any directory.
+- `project-docs/tools/` — Agent machinery: `skills/` (@멘션 절차 — catchup · bootstrap-path-align · bootstrap-project) + `templates/` (cp 스켈레톤)
+- `project-docs/conventions/` — 위 code-style·tool-usage는 핵심 call-out이고, 하위 전체가 적용된다. 개발 중 새 컨벤션 확정 시 여기 파일을 추가하면 자동 in-scope (이 목록 갱신 불필요)
 
 ## Markers (status / approval shorthand)
 
@@ -68,7 +63,7 @@ Claude does not run autonomously. Trigger is always explicit delegation (a `/loo
 
 When given a TODO or a scoped task:
 
-1. Read the TODO entry (`project-docs/todo/backlog/data/{track}/TODO-{N}-{slug}.md`) and referenced docs.
+1. Read the TODO entry (`project-docs/workitem/backlog/data/{track}/TODO-{N}-{slug}.md`) and referenced docs.
 2. Build a plan — file-by-file scope, role of each file, decision points the user must resolve. Include a high-level pseudo-code and architectural structure of the implementation inside the backlog TODO file (only when explicitly requested by the user).
 3. Present the plan. For large or irreversible changes, wait for `[o]` before executing.
 4. Execute. While editing the entry file:
@@ -85,9 +80,11 @@ When given a TODO or a scoped task:
 
 ## STOP / Approval
 
+- **명시적 지시 준수**: 에이전트는 사용자가 명시적으로 요청한 요구사항만을 행동으로 옮기며, 명시적으로 지시하지 않은 자의적인 행동(임의의 문서/코드 수정, 불필요한 사전 수도코드 추가 등)을 스스로 판단하여 수행해서는 안 된다.
 - Large changes, irreversible operations, work affecting shared state outside this workspace → present a plan and wait for `[o]`.
 - Small targeted edits, file reads, status checks, doc freshening → proceed directly.
 - The judgment is the agent's — err toward asking when blast radius is unclear, but don't ask before every file write.
+- 에이전트는 자율 실행하지 않는다 — 트리거는 항상 명시 위임(대화 요청 · `/loop` · 작업 배정). 디렉토리 자동 polling 없음.
 
 ## Git Commit & Push & TODO Promotion Policy
 
@@ -103,11 +100,11 @@ When given a TODO or a scoped task:
 Track names use UPPERCASE. Two separate namespaces (do not mix):
 
 - **ADR tracks** (`decisions/ADR-{NNN}-{TRACK}-{slug}.md`): single-word — {{ADR_TRACKS}}
-- **TODO tracks** (`todo/{backlog,done}/data/{TRACK}/`): single-word or hyphenated subscope — {{TODO_TRACKS}}
+- **TODO tracks** (`workitem/{backlog,done}/data/{TRACK}/`): single-word or hyphenated subscope — {{TODO_TRACKS}}
 
 ADR tracks are broader bundles; TODO tracks include the subscope.
 
-<!-- INIT.md Phase 2에서 프로젝트 트랙으로 치환한다.
+<!-- 프로젝트 셋업(bootstrap-project) 시 프로젝트 트랙으로 치환한다.
      예시 (snacks): ADR = CICD / META / APP / DOCS
                     TODO = CICD-INFRA / PRODUCT / DOCS-CONVENTIONS / META-CGDS -->
 
@@ -117,7 +114,7 @@ ADR tracks are broader bundles; TODO tracks include the subscope.
 - If a `.bak` (or matching suffix) already exists for that file, ask the user before overwriting, chaining, or splitting.
 - ADRs (`decisions/`) are immutable and append-only. Change a decision by writing a new ADR with a Superseded reference.
 - `work-journal/` work logs (when used): `##` sections never modified in place — append a new section instead.
-- `todo/` entry files use cut-and-paste between `backlog/` and `done/` per the TODO Flow above — this is the explicit exception to immutability.
+- `workitem/` entry files use cut-and-paste between `backlog/` and `done/` per the TODO Flow above — this is the explicit exception to immutability.
 - Never create `_v2` files — accumulate under headings in the same file, or rotate via versioned `.bak`.
 
 ## Work Log (`work-journal/`)
@@ -137,7 +134,7 @@ The `work-journal/YYYY-MM-DD.md` work log is **optional**, not required per turn
 - `project-docs/`: 개발 문서·참조.
 - `CLAUDE.md` / `GEMINI.md`: 에이전트 지시문 (워크스페이스 루트).
 
-<!-- INIT.md Phase 1에서 치환한다.
+<!-- 프로젝트 셋업(bootstrap-project) 시 치환한다.
      예시 (snacks):
        WORKSPACE_ROOT: /home/hansol/workspace/snacks
        REPO_LIST: Snacks_BE / Snacks_BE_WORKER / Snacks_FE / project-docs / snacks-gitops
@@ -149,10 +146,10 @@ The `work-journal/YYYY-MM-DD.md` work log is **optional**, not required per turn
 - **Understand Context**: Analyze user requests, the current date, and previous context.
 - **Read Conventions**: Read `project-docs/conventions/tool-usage-for-AI.md` to understand workspace tool usage instructions.
 - **Consult Previous Work Logs**: Refer to the previous day's work log under `project-docs/work-journal/{YYYY-MM-DD.md}`.
-- **Analyze Backlog**: Consult `project-docs/todo/backlog/INDEX.md` to evaluate the current active task state and prepare for planning.
+- **Analyze Backlog**: Consult `project-docs/workitem/backlog/INDEX.md` to evaluate the current active task state and prepare for planning.
 
 ### 2. Planning
-- **Update INDEX**: Write plan details in `project-docs/todo/backlog/INDEX.md` for rapid overview.
+- **Update INDEX**: Write plan details in `project-docs/workitem/backlog/INDEX.md` for rapid overview.
 - **Create TODO File**: Create `TODO-{N}-{slug}.md` under the corresponding track folder in `backlog/data/{TRACK}/` following the existing format. **Include pseudo-code and architectural layout of the target code in this file before implementation only if explicitly requested by the user.**
 - **Human Review**: Share the plan with the Human, obtain approval (`[o]`), and then proceed to execution.
 
