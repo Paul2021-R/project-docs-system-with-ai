@@ -24,7 +24,7 @@
 > **파일명 컨벤션**: `ADR-{NNN}-{TRACK}-{slug}.md`
 >
 > - `NNN`: 3자리 정수, decisions/ 안 다음 빈 번호. ID는 immutable.
-> - `TRACK`: 대문자 짧은 단어. 프로젝트 트랙 체계는 `{{ADR_TRACKS}}` (INIT.md Phase 2에서 확정).
+> - `TRACK`: 대문자 짧은 단어. 프로젝트 트랙 체계는 `{{ADR_TRACKS}}` (bootstrap-project 시 확정).
 >   - TODO 트랙과 의미 매핑 (첫 단어 축약). todo 트랙보다 광범위한 묶음.
 >   <!-- 예시 (snacks):
 >        CICD — CI/CD, k8s manifest, secret, operator, infra

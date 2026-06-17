@@ -1,24 +1,23 @@
 # project-docs-system-with-ai
 
 AI 에이전트(Claude / Gemini)와 함께 쓰는 **CGDS v2(Claude-Gemini Dev System)** 운영 프레임워크의 재사용 가능한 골격이다.
-특정 프로젝트의 내용은 담지 않는다 — 새 프로젝트에 복사한 뒤 `INIT.md`로 placeholder를 채워 사용한다.
+특정 프로젝트의 내용은 담지 않는다 — 새 프로젝트에 복사한 뒤 `@tools/skills/bootstrap-project.md`로 placeholder를 채워 사용한다.
 
 ## 이게 뭔가
 
 워크스페이스 문서·TODO·결정(ADR)·작업일지·외부 리뷰를 AI 에이전트가 일관되게 다루도록 만든 규약 + 템플릿 묶음이다. 핵심은 세 가지다:
 
-1. **3축 협업 구조** — Claude Chat(계획·실행) / Claude Code(위임 실행) / User(검수·결정), + 외부 Gemini(review-only).
+1. **협업 구조** — 실행 에이전트(Claude / Gemini — 동일 룰셋 `CLAUDE.md`/`GEMINI.md`, 지칭 명사만 다름) + User(검수·결정·승인). 리뷰는 별도 상시 에이전트가 아니라 특정 에이전트에 부여하는 task.
 2. **STOP 게이트** — 명시 표식(`[o]`) 없이 단계 전환 금지. 미스언더스탠딩 cost > ping-pong cost.
-3. **SoT 분리** — 진행 상태는 `todo/INDEX.md`, 결정은 `decisions/`(immutable), 구현 spec은 TODO entry, 작업 기록은 `work-journal/`.
+3. **SoT 분리** — 진행 상태는 `workitem/backlog/INDEX.md`, 결정은 `decisions/`(immutable), 구현 spec은 TODO entry, 작업 기록은 `work-journal/`.
 
 ## 새 프로젝트에 적용하는 법
 
 ```
 1. 이 디렉토리를 새 워크스페이스에 project-docs/ 로 복사한다.
-2. CLAUDE.md / GEMINI.md / INIT.md 는 워크스페이스 루트로 옮긴다.
-3. Claude Code에게: "INIT.md를 읽고 Phase 1부터 시작해줘."
-4. INIT Phase 1(Discovery) → Phase 2(문서 생성 + 트랙 확정)에서
-   placeholder 토큰을 프로젝트 값으로 치환한다.
+2. CLAUDE.md / GEMINI.md 는 워크스페이스 루트로 옮긴다.
+3. 실행 에이전트(Claude/Gemini)에게: "@project-docs/tools/skills/bootstrap-project.md 실행해줘."
+4. 스킬이 Discovery → 토큰 치환 → 문서 채우기 → 검증을 순서대로 안내한다.
 5. grep -rn '{{' . 로 미치환 토큰 0건 확인.
 ```
 
@@ -36,57 +35,66 @@ AI 에이전트(Claude / Gemini)와 함께 쓰는 **CGDS v2(Claude-Gemini Dev Sy
 | `{{ADR_TRACKS}}` | ADR 트랙 정의 |
 
 토큰은 `{{...}}` Mustache 형식이다. `grep -rn '{{' .`로 미치환분을 일괄 검출한다.
-트랙 토큰(`{{TODO_TRACKS}}`/`{{ADR_TRACKS}}`)은 `CLAUDE.md`·`GEMINI.md`·`todo/README.md`·`decisions/template.md` 네 곳에 분산되므로 동시에 치환해야 정합이 유지된다.
+트랙 토큰(`{{TODO_TRACKS}}`/`{{ADR_TRACKS}}`)은 `CLAUDE.md`·`GEMINI.md`·`workitem/README.md`·`decisions/template.md`·`decisions/ADR-000-template.md` 다섯 곳에 분산되므로 동시에 치환해야 정합이 유지된다.
 
 ## 새 세션 시작 시 읽는 순서 (적용 후 기준)
 
 1. **`project-docs/README.md`** — 진입점 + 1뎁스 인덱스 (프로젝트별로 본 파일을 갈음)
-2. **`/CLAUDE.md`** — Claude Code 작업 지시문 (역할 / TODO 흐름 / 불변성)
-3. **`project-docs/todo/README.md`** — TODO 운영 규약 (트랙·파일명 패턴·상태 필드)
-4. **`project-docs/todo/backlog/INDEX.md`** — 미착수 큐 + `> Currently active` 마커
-5. **`project-docs/todo/done/INDEX.md`** — 완료 아카이브
+2. **`/CLAUDE.md`** (· `/GEMINI.md` twin) — 에이전트 작업 지시문 (TODO 흐름 / STOP / 불변성)
+3. **`project-docs/workitem/README.md`** — TODO 운영 규약 (트랙·파일명 패턴·상태 필드)
+4. **`project-docs/workitem/backlog/INDEX.md`** — 미착수 큐 + `> Currently active` 마커
+5. **`project-docs/workitem/done/INDEX.md`** — 완료 아카이브
 6. **`project-docs/decisions/`** — 누적 ADR (`ADR-{NNN}-{TRACK}-{slug}.md`)
-
-## 역할
-
-- **Claude (Chat)** — 계획 + 메인 실행. 의도 청취 → 명확화 → 계획 분해 → 코드/문서 변경.
-- **User** — 결정자. 우선순위 결정, 큰 변경 승인(`[o]`)/수정(`[/]`), 환경 의존 작업(.env, age 키 등).
-- **Claude Code** — 위임 기반 병렬 보조자. 명시 위임 시 진입. 자율 polling 없음.
 
 ## 디렉토리 가이드
 
 ```
 project-docs-system-with-ai/
 ├── README.md                  # 본 파일 — 시스템 설명 + 적용법
-├── INIT.md                    # 부트스트랩 체크리스트 (1급 진입점)
 ├── CLAUDE.md                  # Claude 에이전트 지시문 → 적용 시 워크스페이스 루트로
 ├── GEMINI.md                  # Gemini 에이전트 지시문 → 적용 시 워크스페이스 루트로
 ├── conventions/
 │   ├── tool-usage-for-AI.md   # AI 도구 사용 규약 (Filesystem/Plane MCP, 메모리, 문서)
 │   ├── code-style.md          # 워크스페이스 분리 철학 + 언어 무관 코딩/Git 규약
-│   └── skill-write-journal.md # 작업 일지 작성 스킬
+│   ├── skill-write-journal.md # 작업 일지 작성 스킬
+│   └── api-test-collection.md # API 테스트 시나리오 규약 (옵션)
+├── architecture/
+│   ├── overview.md            # 시스템 구성·인프라 골격
+│   └── cicd.md                # CI/CD 파이프라인 설계 (어떤 프로젝트든 동봉)
+├── context/                   # 운영 참고 자료 (자주 안 바뀜)
+│   ├── setup/                 # getting-started · secret-guide · troubleshooting
+│   ├── roadmap/               # 향후 설계·확장 계획 (reference-only)
+│   └── analysis/              # 일회성 분석·개선 포인트
 ├── decisions/                 # ADR (immutable, append-only)
 │   ├── template.md
 │   └── ADR-000-template.md
-├── todo/
+├── workitem/
 │   ├── README.md              # TODO 운영 규약
 │   ├── backlog/{INDEX.md, data/}
 │   └── done/{INDEX.md, data/}
 ├── api/                       # API 명세 재분류 시스템
 │   ├── README.md
-│   └── TEMPLATE.md
+│   ├── INDEX.md               # 진입점 — 모듈 인덱스
+│   ├── POLICIES.md            # 공통 횡단 정책
+│   ├── TEMPLATE.md            # 신규 모듈 작성 템플릿
+│   └── data/                  # 모듈별 정의
 ├── work-journal/README.md     # 작업 일지 운영 규약
 ├── specs/README.md            # Ground Truth 기획 명세 규약
-├── reviews/README.md          # 외부 Gemini 리뷰 규약
+├── reviews/README.md          # 리뷰 보고서 보관 규약 (opt-in)
 ├── defaults/owner-template.md # owner 분배 기본값
-└── scripts/README.md          # 경량 bash 도구 레이어 규약 (본체 .sh 미포함)
+├── meta/README.md             # 워크스페이스 운영 메타 (백업 보관 규약)
+├── legacy/README.md           # 폐기 도구/문서 아카이브 규약
+├── tools/                     # 에이전트 운용 머시너리 (agent-run)
+│   ├── skills/                # @멘션 실행 절차 (catchup · bootstrap-path-align · bootstrap-project)
+│   └── templates/             # cp-기반 스켈레톤 (workitem · work-journal)
+└── scripts/README.md          # 경량 bash 도구 레이어 규약 (본체 .sh 미포함, machine-run)
 ```
 
 ## 핵심 규약
 
 ### TODO / ADR Identifier
 
-- TODO entry 파일명: `TODO-{N}-{slug}.md` (소수점 ID 허용, ID는 immutable). 자세히는 `todo/README.md`.
+- TODO entry 파일명: `TODO-{N}-{slug}.md` (소수점 ID 허용, ID는 immutable). 자세히는 `workitem/README.md`.
 - ADR 파일명: `ADR-{NNN}-{TRACK}-{slug}.md` (TRACK 대문자). 자세히는 `decisions/template.md`.
 
 ### STOP / 승인
@@ -100,7 +108,7 @@ project-docs-system-with-ai/
 - 큰 폭 재작성 시 기존 파일을 `<filename>.bak.{YYYYMMDD-HHMM}-{사유}`로 백업 후 작성.
 - ADR(`decisions/`)은 immutable, append-only. 변경 시 새 ADR로 superseding.
 - `work-journal/` `##` 섹션은 in-place 수정 금지 — 새 섹션 누적.
-- `todo/` entry는 backlog → done cut-and-paste (불변성 예외).
+- `workitem/` entry는 backlog → done cut-and-paste (불변성 예외).
 - `_v2` 파일 금지 — 헤딩 누적 또는 versioned `.bak` rotation.
 - Obsidian frontmatter(`---` tags 블록) 미사용 — 일반 마크다운.
 

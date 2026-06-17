@@ -10,5 +10,5 @@
 ---
 
 > **파일명 컨벤션**: `ADR-{NNN}-{TRACK}-{slug}.md` (대문자 트랙)
-> 트랙: `{{ADR_TRACKS}}` (INIT.md Phase 2에서 확정)
+> 트랙: `{{ADR_TRACKS}}` (bootstrap-project 시 확정)
 > 자세히는 `decisions/template.md` 하단 참조.

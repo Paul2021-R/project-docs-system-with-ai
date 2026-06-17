@@ -45,7 +45,7 @@ self-hosted Plane을 다룰 때 사용하는 도구다. 사용하지 않는 프�
 
 ### 2.3 로컬 TODO ↔ Plane work item 연동 (범용 원칙)
 
-Plane work item과 로컬 TODO(`todo/{backlog,done}/data/`)는 **별개 체계**이다. 역할로 분리해 운영한다 (SoT 분리).
+Plane work item과 로컬 TODO(`workitem/{backlog,done}/data/`)는 **별개 체계**이다. 역할로 분리해 운영한다 (SoT 분리).
 
 - **Plane** = work item 단위 추적. 상태·우선순위·담당자·브랜치 단위의 SoT.
 - **로컬 TODO** = 구현 spec·수도코드·설계 구조의 SoT.

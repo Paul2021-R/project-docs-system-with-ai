@@ -119,7 +119,7 @@ staging/production용 k8s Secret은 SOPS 암호화 + KSOPS generator + overlay �
 원칙:
 
 - **모든 브랜치는 work item과 1:1 매핑된다.** 브랜치명에 work item identifier가 포함된다.
-- **브랜치와 TODO는 별개 체계이다.** 한 브랜치에서 여러 TODO가 진행될 수 있다. TODO 측에서는 `branch:` 필드로 어느 브랜치에서 진행할지 지정한다 (`todo/README.md` 참조).
+- **브랜치와 TODO는 별개 체계이다.** 한 브랜치에서 여러 TODO가 진행될 수 있다. TODO 측에서는 `branch:` 필드로 어느 브랜치에서 진행할지 지정한다 (`workitem/README.md` 참조).
 - 식별자가 없는 즉흥 작업은 브랜치를 만들기 전에 트래커에 work item부터 등록한다.
 - PR 본문 첫 줄에는 해당 work item URL을 둔다.
 
