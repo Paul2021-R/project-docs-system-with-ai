@@ -1,10 +1,9 @@
 # CI/CD 파이프라인 설계
 
-본 문서는 {{PROJECT_NAME}}의 CI/CD 파이프라인 설계와 운영 규약을 정의한다. 시스템 구성은 [overview.md](overview.md), 결정 근거는 [../decisions/](../decisions/) 참조.
+본 문서는 Holygrail의 CI/CD 파이프라인 설계와 운영 규약을 정의한다. 시스템 구성은 [overview.md](overview.md), 결정 근거는 [../decisions/](../decisions/) 참조.
 
-<!-- 어떤 프로젝트든 CI/CD는 결국 생기므로 본 문서는 항상 동봉한다.
-     아직 파이프라인이 없으면 §1만 "현재: 수동 배포"로 채우고 나머지는 'TBD'로 둔다 — 삭제하지 말고 추적한다.
-     bootstrap-project 시 Discovery(.github/workflows · Jenkinsfile · *.tf 등) 결과로 채운다. -->
+> **현재 상태**: CI/CD 파이프라인 **없음**. 빌드는 로컬 Godot 에디터의 export(플랫폼별 바이너리) 수동 방식.
+> 본 문서 골격은 **삭제하지 않고 보존**한다 — 향후 Godot export 자동화(GitHub Actions 등) 또는 서버 배포 도입 시 각 절을 채운다 (seam 유지).
 
 ---
 
@@ -43,7 +42,7 @@
 
 ## 4. 배포 대상 구조
 
-<!-- {{GITOPS_REPO}} 디렉토리 트리, base/overlay 책임 분배 등.
+<!-- N/A 디렉토리 트리, base/overlay 책임 분배 등.
      k8s/GitOps 미사용이면 배포 산출물(이미지·아티팩트·배포 스크립트) 구조로 대체. -->
 
 ## 5. 핵심 결정 사항

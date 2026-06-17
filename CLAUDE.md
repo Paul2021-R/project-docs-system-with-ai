@@ -92,21 +92,17 @@ When given a TODO or a scoped task:
 - **MANDATORY**: Do NOT automatically perform `git commit` or `git push` even if a checklist, workflow, or task description mentions it, unless the user writes a direct, explicit command in their conversational message (e.g., "commit and push now").
 - **MANDATORY**: Never move TODO files (e.g., from `backlog/` to `done/`) or update `INDEX.md` files (to promote backlog tasks to done) unless the user explicitly commands or requests it in the conversation.
 - **MANDATORY**: During the planning phase (such as inside `implementation_plan.md` or `task.md`), all git commit/push and TODO status promotion/moving steps must be clearly separated and marked with "Only upon explicit user request".
-- **MANDATORY**: {{GITOPS_REPO}} 내의 빌드 번호, `newTag`/`imageTag` 등 GitOps 배포와 연관된 이미지 태그나 커밋 해시 값은 절대 AI가 임의로 수정하거나 되돌려서는 안 된다. (이러한 값은 CI/CD 파이프라인이나 사용자가 관리하므로 수정 대상에서 제외한다.)
+- **MANDATORY**: N/A 내의 빌드 번호, `newTag`/`imageTag` 등 GitOps 배포와 연관된 이미지 태그나 커밋 해시 값은 절대 AI가 임의로 수정하거나 되돌려서는 안 된다. (이러한 값은 CI/CD 파이프라인이나 사용자가 관리하므로 수정 대상에서 제외한다.)
 - Drafting changes, updating status artifacts, and validating setups locally are allowed, but commit, push, and TODO promotion actions require explicit user commands.
 
 ## Tracks
 
 Track names use UPPERCASE. Two separate namespaces (do not mix):
 
-- **ADR tracks** (`decisions/ADR-{NNN}-{TRACK}-{slug}.md`): single-word — {{ADR_TRACKS}}
-- **TODO tracks** (`workitem/{backlog,done}/data/{TRACK}/`): single-word or hyphenated subscope — {{TODO_TRACKS}}
+- **ADR tracks** (`decisions/ADR-{NNN}-{TRACK}-{slug}.md`): single-word — GAMEPLAY, TECH, PROCESS
+- **TODO tracks** (`workitem/{backlog,done}/data/{TRACK}/`): single-word or hyphenated subscope — GAMEPLAY, ART, AUDIO, ENGINE, BUILD
 
 ADR tracks are broader bundles; TODO tracks include the subscope.
-
-<!-- 프로젝트 셋업(bootstrap-project) 시 프로젝트 트랙으로 치환한다.
-     예시 (snacks): ADR = CICD / META / APP / DOCS
-                    TODO = CICD-INFRA / PRODUCT / DOCS-CONVENTIONS / META-CGDS -->
 
 ## Document Immutability
 
@@ -128,17 +124,11 @@ The `work-journal/YYYY-MM-DD.md` work log is **optional**, not required per turn
 
 ## Workspace Environments
 
-- Directory: `{{WORKSPACE_ROOT}}`
+- Directory: `/home/hansol/workspace/holygrail`
 - **⚠️ 주의: 워크스페이스 최상단 폴더 자체가 Git 레포지토리가 아닐 수 있다.** 그 경우 Git 작업은 아래 각 하위 디렉토리(개별 레포) 내에서 수행한다.
-- Sub-repos: {{REPO_LIST}}
+- Sub-repos: project-holygrail (Godot 4.6 게임), project-docs (문서 시스템)
 - `project-docs/`: 개발 문서·참조.
 - `CLAUDE.md` / `GEMINI.md`: 에이전트 지시문 (워크스페이스 루트).
-
-<!-- 프로젝트 셋업(bootstrap-project) 시 치환한다.
-     예시 (snacks):
-       WORKSPACE_ROOT: /home/hansol/workspace/snacks
-       REPO_LIST: Snacks_BE / Snacks_BE_WORKER / Snacks_FE / project-docs / snacks-gitops
-       GITOPS_REPO: snacks-gitops -->
 
 ## Task Execution Guidelines
 

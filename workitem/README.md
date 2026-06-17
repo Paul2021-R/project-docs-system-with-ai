@@ -19,18 +19,19 @@ workitem/
 
 ### 트랙 정의
 
-프로젝트 트랙 체계는 `{{TODO_TRACKS}}` (bootstrap-project 시 확정).
+프로젝트 트랙 체계 = `GAMEPLAY, ART, AUDIO, ENGINE, BUILD`.
 
 새 TODO는 확정된 트랙 중 하나로 분류한다. 어디에도 정확히 맞지 않으면 새 트랙 신설 여부를 먼저 결정한다.
 
-<!-- 예시 (snacks):
 | 트랙 | 범위 |
 |---|---|
-| `CICD-INFRA` | CI/CD 파이프라인, k8s manifest, NGF/Gateway, operator, secrets/age, monitoring |
-| `PRODUCT` | 어플리케이션 코드 (BE / Worker / FE), 도메인 모델·비즈니스 로직·API 구현 |
-| `DOCS-CONVENTIONS` | 문서·컨벤션 (architecture, code-style, lint, env 가이드) |
-| `META-CGDS` | 메타 시스템 자체 (에이전트 메타 원칙, 워크스페이스 운영 환경) |
--->
+| `GAMEPLAY` | 게임 로직·메커닉·입력 처리, 플레이어/적/아이템 동작, 씬 구성, 상태 관리 |
+| `ART` | 스프라이트·텍스처·애니메이션·셰이더·VFX, UI 비주얼 |
+| `AUDIO` | BGM·효과음·오디오 버스·사운드 트리거 |
+| `ENGINE` | 프로젝트 설정·물리(Jolt)·렌더링·플러그인·성능, 코드 아키텍처(autoload 등) |
+| `BUILD` | export 프리셋·플랫폼 빌드·패키징·릴리스, LFS/에셋 파이프라인 |
+
+> ⚠️ 향후 서버 백엔드가 추가되면 `SERVER`(또는 hyphen subscope) 트랙을 신설한다.
 
 ### 트랙 명명 컨벤션
 

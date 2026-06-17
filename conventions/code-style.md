@@ -19,11 +19,24 @@
 
 ## 1. General
 
-<!-- init에서 탐지된 언어 목록과 들여쓰기 규칙이 채워진다 -->
+현재 코드 자산은 **GDScript (Godot 4.6)** 단일 언어다. Godot 공식 스타일 가이드를 따른다.
+
+- **들여쓰기**: 탭(Godot 기본). 스페이스 혼용 금지.
+- **함수/변수**: `snake_case` (예: `_process`, `get_vector`).
+- **클래스/노드 타입**: `PascalCase` (예: `Sprite2D`, `Node2D`).
+- **상수·enum 값**: `UPPER_SNAKE_CASE`.
+- **씬/스크립트 파일명**: `snake_case` (예: `sprite_2d.gd`, `main_00.tscn`).
+- **시그널**: 과거형 `snake_case` (예: `body_entered`).
+- **타입 힌트 권장**: `var speed: float = 200.0`, `func _process(delta: float) -> void:`.
+- **노드 참조 캐싱**: `@onready` + `$Path` 또는 `%UniqueName`.
+
+> ⚠️ 향후 서버/툴 코드(TS·Python 등)가 추가되면 해당 언어 절을 본 섹션 아래에 누적한다. §3 Naming 표는 그 비-GDScript 코드용 일반 규약으로 유지한다.
 
 ## 2. Repository Layout & Containerization
 
-각 앱 레포({{REPO_LIST}})는 동일 레이아웃 컨벤션을 따른다. §0의 원칙 1, 2를 풀어낸 것이다.
+> **현재 적용 범위**: 아래 `app/`+`Dockerfile`+`k8s/` 레이아웃은 **컨테이너화되는 서버/웹 레포**용 규약이다. 현재 `project-holygrail`은 Godot 프로젝트로, **레포 루트 자체가 Godot 프로젝트 루트**(`project.godot`)이며 `app/`·Docker·k8s를 쓰지 않는다. 본 절은 **향후 서버 레포 추가 시 적용**하도록 보존한다 (seam 유지).
+
+각 앱 레포는 동일 레이아웃 컨벤션을 따른다. §0의 원칙 1, 2를 풀어낸 것이다.
 
 ```
 <repo-root>/
@@ -73,6 +86,8 @@ staging/production용 k8s Secret은 SOPS 암호화 + KSOPS generator + overlay �
 ---
 
 ## 3. Naming
+
+> 현재 코드는 GDScript이며 그 네이밍은 §1을 따른다. 아래 표는 **비-GDScript 코드(향후 서버/웹/툴)** 용 일반 규약으로 유지한다.
 
 | 대상 | 규칙 | 예시 |
 |------|------|------|

@@ -24,13 +24,11 @@
 > **파일명 컨벤션**: `ADR-{NNN}-{TRACK}-{slug}.md`
 >
 > - `NNN`: 3자리 정수, decisions/ 안 다음 빈 번호. ID는 immutable.
-> - `TRACK`: 대문자 짧은 단어. 프로젝트 트랙 체계는 `{{ADR_TRACKS}}` (bootstrap-project 시 확정).
+> - `TRACK`: 대문자 짧은 단어. 프로젝트 트랙 체계 = `GAMEPLAY, TECH, PROCESS`.
 >   - TODO 트랙과 의미 매핑 (첫 단어 축약). todo 트랙보다 광범위한 묶음.
->   <!-- 예시 (snacks):
->        CICD — CI/CD, k8s manifest, secret, operator, infra
->        META — CGDS 같은 메타 시스템·워크플로우·운영 원칙
->        APP  — 애플리케이션 레벨 결정 (BE/FE/Worker)
->        DOCS — 문서·컨벤션 자체에 대한 결정 -->
+>        GAMEPLAY — 게임 설계·메커닉·콘텐츠 구조 결정 (TODO: GAMEPLAY/ART/AUDIO 포괄)
+>        TECH     — 엔진·아키텍처·물리·렌더·빌드/export 기술 결정 (TODO: ENGINE/BUILD 포괄)
+>        PROCESS  — 협업·문서·컨벤션·워크플로우 결정
 > - `slug`: 영문 kebab-case, 30자 내외, 결정 본질을 압축.
 > - 예: `ADR-008-CICD-jenkins-job-routing.md`, `ADR-012-META-track-rename.md`
 
