@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "Edit|Write|NotebookEdit", "hooks": [ { "type": "command", "command": "{{WORKSPACE_ROOT}}/project-docs/scripts/protect-tests.sh" } ] }
+    ],
+    "Stop": [
+      { "hooks": [ { "type": "command", "command": "{{WORKSPACE_ROOT}}/project-docs/scripts/journal-gate.sh" } ] }
+    ]
+  }
+}

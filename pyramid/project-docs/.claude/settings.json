@@ -1,0 +1,7 @@
+{
+  "hooks": {
+    "Stop": [
+      { "hooks": [ { "type": "command", "command": "{{WORKSPACE_ROOT}}/project-docs/scripts/journal-gate.sh" } ] }
+    ]
+  }
+}
